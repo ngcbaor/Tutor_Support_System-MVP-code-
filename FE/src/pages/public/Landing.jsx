@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import hcmutLogo from '../assets/icons/Ho Chi Minh City University of Technology_idnZjcXgHX_1 3.svg'
-import panelImage from '../assets/icons/image 15.svg'
+import hcmutLogo from '../../assets/icons/Ho Chi Minh City University of Technology_idnZjcXgHX_1 3.svg'
+import panelImage from '../../assets/icons/image 15.svg'
 
 function Landing() {
   const [openFAQ, setOpenFAQ] = useState(null)
