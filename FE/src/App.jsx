@@ -2,6 +2,7 @@ import './index.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
+import Layout from './components/Layout'
 
 // Public pages
 import Landing from './pages/public/Landing'
@@ -9,18 +10,43 @@ import AuthCallback from './pages/public/AuthCallback'
 
 // Student pages
 import StudentDashboard from './pages/student/Dashboard'
+import StudentTimetable from './pages/student/Timetable'
+import CourseList from './pages/student/CourseList'
 
 // Tutor pages
 import TutorDashboard from './pages/tutor/Dashboard'
+import SessionManagement from './pages/tutor/SessionManagement'
+import CourseReport from './pages/tutor/CourseReport'
+import TutorClass from './pages/tutor/Class'
+import ClassRoster from './pages/tutor/ClassRoster'
+import StudentProfile from './pages/tutor/StudentProfile'
 
 // Coordinator pages
 import CoordinatorDashboard from './pages/coordinator/Dashboard'
+import LoadBalancing from './pages/coordinator/LoadBalancing'
 
 // Academic pages
 import AcademicDashboard from './pages/academic/Dashboard'
 
+// Academic Affairs pages
+import AcademicAffairsDashboard from './pages/academic_affairs/Dashboard'
+import GenerateOverviewReport from './pages/academic_affairs/GenerateOverviewReport'
+import AcademicAffairsReportList from './pages/academic_affairs/ReportList'
+
+// Student Affairs pages
+import StudentAffairsDashboard from './pages/student_affairs/Dashboard'
+import StudentAffairsReportList from './pages/student_affairs/ReportList'
+
+// Academic Department pages
+import MonitorStudentPerformance from './pages/academic_department/MonitorStudentPerformance'
+import PerformanceDashboard from './pages/academic_department/PerformanceDashboard'
+import CourseDetails from './pages/academic_department/CourseDetails'
+
 // Shared pages
 import Profile from './pages/shared/Profile'
+import Library from './pages/shared/Library'
+import ReportViewAllocation from './pages/shared/ReportViewAllocation'
+import ReportViewAwarding from './pages/shared/ReportViewAwarding'
 
 function App() {
   return (
@@ -36,7 +62,39 @@ function App() {
             path="/student/dashboard"
             element={
               <ProtectedRoute requiredRole="student">
-                <StudentDashboard />
+                <Layout>
+                  <StudentDashboard />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student/timetable"
+            element={
+              <ProtectedRoute requiredRole="student">
+                <Layout>
+                  <StudentTimetable />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student/courses"
+            element={
+              <ProtectedRoute requiredRole="student">
+                <Layout>
+                  <CourseList />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student/resources"
+            element={
+              <ProtectedRoute requiredRole="student">
+                <Layout>
+                  <Library />
+                </Layout>
               </ProtectedRoute>
             }
           />
@@ -46,7 +104,59 @@ function App() {
             path="/tutor/dashboard"
             element={
               <ProtectedRoute requiredRole="tutor">
-                <TutorDashboard />
+                <Layout>
+                  <TutorDashboard />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tutor/sessions"
+            element={
+              <ProtectedRoute requiredRole="tutor">
+                <Layout>
+                  <SessionManagement />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tutor/reports"
+            element={
+              <ProtectedRoute requiredRole="tutor">
+                <Layout>
+                  <CourseReport />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tutor/class"
+            element={
+              <ProtectedRoute requiredRole="tutor">
+                <Layout>
+                  <TutorClass />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tutor/class/:classId"
+            element={
+              <ProtectedRoute requiredRole="tutor">
+                <Layout>
+                  <ClassRoster />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tutor/class/:classId/student/:studentId"
+            element={
+              <ProtectedRoute requiredRole="tutor">
+                <Layout>
+                  <StudentProfile />
+                </Layout>
               </ProtectedRoute>
             }
           />
@@ -56,7 +166,19 @@ function App() {
             path="/coordinator/dashboard"
             element={
               <ProtectedRoute requiredRole="coordinator">
-                <CoordinatorDashboard />
+                <Layout>
+                  <CoordinatorDashboard />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/coordinator/load-balancing"
+            element={
+              <ProtectedRoute requiredRole="coordinator">
+                <Layout>
+                  <LoadBalancing />
+                </Layout>
               </ProtectedRoute>
             }
           />
@@ -66,7 +188,95 @@ function App() {
             path="/academic/dashboard"
             element={
               <ProtectedRoute requiredRole="academic">
-                <AcademicDashboard />
+                <Layout>
+                  <AcademicDashboard />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Academic Affairs routes */}
+          <Route
+            path="/academic-affairs/dashboard"
+            element={
+              <ProtectedRoute requiredRole="academic_affairs">
+                <Layout>
+                  <AcademicAffairsDashboard />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/academic-affairs/generate-overview-report"
+            element={
+              <ProtectedRoute requiredRole="academic_affairs">
+                <Layout>
+                  <GenerateOverviewReport />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/academic-affairs/report-list"
+            element={
+              <ProtectedRoute requiredRole="academic_affairs">
+                <Layout>
+                  <AcademicAffairsReportList />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Student Affairs routes */}
+          <Route
+            path="/student-affairs/dashboard"
+            element={
+              <ProtectedRoute requiredRole="student_affairs">
+                <Layout>
+                  <StudentAffairsDashboard />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student-affairs/report-list"
+            element={
+              <ProtectedRoute requiredRole="student_affairs">
+                <Layout>
+                  <StudentAffairsReportList />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Academic Department routes */}
+          <Route
+            path="/academic-department/monitor-performance"
+            element={
+              <ProtectedRoute requiredRole="academic_department">
+                <Layout>
+                  <MonitorStudentPerformance />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/academic-department/monitor-performance/dashboard"
+            element={
+              <ProtectedRoute requiredRole="academic_department">
+                <Layout>
+                  <PerformanceDashboard />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/academic-department/monitor-performance/course/:courseId"
+            element={
+              <ProtectedRoute requiredRole="academic_department">
+                <Layout>
+                  <CourseDetails />
+                </Layout>
               </ProtectedRoute>
             }
           />
@@ -76,7 +286,29 @@ function App() {
             path="/profile"
             element={
               <ProtectedRoute>
-                <Profile />
+                <Layout>
+                  <Profile />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/report/allocation/:reportId"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <ReportViewAllocation />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/report/awarding/:reportId"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <ReportViewAwarding />
+                </Layout>
               </ProtectedRoute>
             }
           />

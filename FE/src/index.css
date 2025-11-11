@@ -1,1 +1,15 @@
 @import "tailwindcss";
+
+/* Custom icon hover effects */
+.nav-icon-inactive {
+  filter: grayscale(100%) opacity(0.5);
+  transition: filter 0.2s ease;
+}
+
+.group:hover .nav-icon-inactive {
+  filter: invert(38%) sepia(91%) saturate(2476%) hue-rotate(202deg) brightness(95%) contrast(92%);
+}
+
+.nav-icon-active {
+  filter: invert(38%) sepia(91%) saturate(2476%) hue-rotate(202deg) brightness(95%) contrast(92%);
+}
