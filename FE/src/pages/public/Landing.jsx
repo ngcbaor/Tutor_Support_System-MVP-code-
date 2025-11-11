@@ -1,8 +1,10 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import hcmutLogo from '../../assets/icons/Ho Chi Minh City University of Technology_idnZjcXgHX_1 3.svg'
 import panelImage from '../../assets/icons/image 15.svg'
 
 function Landing() {
+  const navigate = useNavigate()
   const [openFAQ, setOpenFAQ] = useState(null)
 
   const services = [
@@ -53,7 +55,10 @@ function Landing() {
               <span className="text-blue-600">Tutor Support</span>
             </span>
           </div>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+          <button 
+            onClick={() => navigate('/login')}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+          >
             Find a tutor
           </button>
         </div>
@@ -69,7 +74,10 @@ function Landing() {
             <p className="text-lg text-gray-600">
               Get personalized lessons aligned with your school syllabus and achieve academic success.
             </p>
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium text-lg transition-colors shadow-lg hover:shadow-xl">
+            <button 
+              onClick={() => navigate('/login')}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium text-lg transition-colors shadow-lg hover:shadow-xl"
+            >
               Get started
             </button>
           </div>
