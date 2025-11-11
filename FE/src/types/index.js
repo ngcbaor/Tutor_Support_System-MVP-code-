@@ -3,8 +3,9 @@ export const ROLES = {
   STUDENT: 'student',
   TUTOR: 'tutor',
   COORDINATOR: 'coordinator',
-  ACADEMIC: 'academic',
-  PROGRAM_ADMIN: 'program_admin'
+  ACADEMIC_AFFAIRS: 'academic_affairs',
+  STUDENT_AFFAIRS: 'student_affairs',
+  ACADEMIC_DEPARTMENT: 'academic_department'
 }
 
 // Session status

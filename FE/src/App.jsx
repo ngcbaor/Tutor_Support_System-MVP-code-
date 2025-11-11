@@ -6,6 +6,7 @@ import Layout from './components/Layout'
 
 // Public pages
 import Landing from './pages/public/Landing'
+import Login from './pages/public/Login'
 import AuthCallback from './pages/public/AuthCallback'
 
 // Student pages
@@ -24,9 +25,6 @@ import StudentProfile from './pages/tutor/StudentProfile'
 // Coordinator pages
 import CoordinatorDashboard from './pages/coordinator/Dashboard'
 import LoadBalancing from './pages/coordinator/LoadBalancing'
-
-// Academic pages
-import AcademicDashboard from './pages/academic/Dashboard'
 
 // Academic Affairs pages
 import AcademicAffairsDashboard from './pages/academic_affairs/Dashboard'
@@ -55,6 +53,7 @@ function App() {
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
 
           {/* Student routes */}
@@ -94,6 +93,16 @@ function App() {
               <ProtectedRoute requiredRole="student">
                 <Layout>
                   <Library />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student/profile"
+            element={
+              <ProtectedRoute requiredRole="student">
+                <Layout>
+                  <Profile />
                 </Layout>
               </ProtectedRoute>
             }
@@ -160,6 +169,16 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/tutor/profile"
+            element={
+              <ProtectedRoute requiredRole="tutor">
+                <Layout>
+                  <Profile />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
 
           {/* Coordinator routes */}
           <Route
@@ -182,14 +201,12 @@ function App() {
               </ProtectedRoute>
             }
           />
-
-          {/* Academic routes */}
           <Route
-            path="/academic/dashboard"
+            path="/coordinator/profile"
             element={
-              <ProtectedRoute requiredRole="academic">
+              <ProtectedRoute requiredRole="coordinator">
                 <Layout>
-                  <AcademicDashboard />
+                  <Profile />
                 </Layout>
               </ProtectedRoute>
             }
@@ -202,6 +219,16 @@ function App() {
               <ProtectedRoute requiredRole="academic_affairs">
                 <Layout>
                   <AcademicAffairsDashboard />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/academic-affairs/profile"
+            element={
+              <ProtectedRoute requiredRole="academic_affairs">
+                <Layout>
+                  <Profile />
                 </Layout>
               </ProtectedRoute>
             }
@@ -248,6 +275,16 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/student-affairs/profile"
+            element={
+              <ProtectedRoute requiredRole="student_affairs">
+                <Layout>
+                  <Profile />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
 
           {/* Academic Department routes */}
           <Route
@@ -256,6 +293,16 @@ function App() {
               <ProtectedRoute requiredRole="academic_department">
                 <Layout>
                   <MonitorStudentPerformance />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/academic-department/profile"
+            element={
+              <ProtectedRoute requiredRole="academic_department">
+                <Layout>
+                  <Profile />
                 </Layout>
               </ProtectedRoute>
             }
