@@ -13,6 +13,7 @@ import AuthCallback from './pages/public/AuthCallback'
 import StudentDashboard from './pages/student/Dashboard'
 import StudentTimetable from './pages/student/Timetable'
 import CourseList from './pages/student/CourseList'
+import StudentResources from './pages/resources/StudentResources'
 
 // Tutor pages
 import TutorDashboard from './pages/tutor/Dashboard'
@@ -21,6 +22,8 @@ import CourseReport from './pages/tutor/CourseReport'
 import TutorClass from './pages/tutor/Class'
 import ClassRoster from './pages/tutor/ClassRoster'
 import StudentProfile from './pages/tutor/StudentProfile'
+import TutorResources from './pages/resources/TutorResources'
+import HcmutLibSearch from './pages/resources/hcmut_lib_search'
 
 // Coordinator pages
 import CoordinatorDashboard from './pages/coordinator/Dashboard'
@@ -107,6 +110,16 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/student/resources"
+            element={
+              <ProtectedRoute requiredRole="student">
+                <Layout>
+                  <StudentResources />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
 
           {/* Tutor routes */}
           <Route
@@ -175,6 +188,27 @@ function App() {
               <ProtectedRoute requiredRole="tutor">
                 <Layout>
                   <Profile />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/tutor/resources"
+            element={
+              <ProtectedRoute requiredRole="tutor">
+                <Layout>
+                  <TutorResources />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tutor/resources/hcmut-library"
+            element={
+              <ProtectedRoute requiredRole="tutor">
+                <Layout>
+                  <HcmutLibSearch />
                 </Layout>
               </ProtectedRoute>
             }

@@ -1,0 +1,99 @@
+{
+  "users": [
+    {
+      "id": "user_123",
+      "name": "Student A",
+      "email": "student@hust.edu.vn"
+    }
+  ],
+  "classes": [
+    {
+      "code": "IT4409-1",
+      "name": "Advanced Web Programming"
+    },
+    {
+      "code": "IT4083-2",
+      "name": "Distributed Databases"
+    },
+    {
+      "code": "CS1010-5",
+      "name": "Introduction to Computing"
+    }
+  ],
+  "resources": [
+    {
+      "id": "f-adv-web-project",
+      "class_code": "IT4409-1",
+      "filename": "Advanced_Web_Programming_Project.zip",
+      "type": "archive",
+      "author": "Dr. Minh Tran",
+      "subject": "Advanced Web Programming",
+      "size": "48.2 MB",
+      "url": "/data/resources/Advanced_Web_Programming_Project.zip",
+      "createdAt": "2025-05-10T09:30:00Z",
+      "tags": ["project", "advanced-web", "node", "webpack"]
+    },
+    {
+      "id": "f-adv-web-sample",
+      "class_code": "IT4409-1",
+      "filename": "advanced_web_programming_sample.jsx",
+      "type": "code",
+      "author": "Dr. Minh Tran",
+      "subject": "Advanced Web Programming",
+      "size": "8.2 KB",
+      "url": "/data/resources/advanced_web_programming_sample.jsx",
+      "createdAt": "2025-11-20T10:00:00Z",
+      "tags": ["react", "hooks", "performance", "best-practices"]
+    },
+    {
+      "id": "f-frontend-performance",
+      "class_code": "IT4409-1",
+      "filename": "Frontend_Performance_Optimization.pdf",
+      "type": "pdf",
+      "author": "Prof. Le Thi Hoa",
+      "subject": "Advanced Web Programming",
+      "size": "3.1 MB",
+      "url": "/data/resources/Frontend_Performance_Optimization.pdf",
+      "createdAt": "2025-03-22T14:15:00Z",
+      "tags": ["performance", "frontend", "optimization"]
+    },
+    {
+      "id": "f-distdb-replication",
+      "class_code": "IT4083-2",
+      "filename": "Distributed_DB_Replication_Notes.pdf",
+      "type": "pdf",
+      "author": "Dr. Nguyen Van Long",
+      "subject": "Distributed Databases",
+      "size": "1.4 MB",
+      "url": "/data/resources/Distributed_DB_Replication_Notes.pdf",
+      "createdAt": "2024-11-05T11:00:00Z",
+      "tags": ["distributed", "replication", "consensus"]
+    }
+  ],
+  "enrollments": [
+    {
+      "user_id": "user_123",
+      "class_code": "IT4409-1"
+    },
+    {
+      "user_id": "user_123",
+      "class_code": "IT4083-2"
+    },
+    {
+      "user_id": "user_123",
+      "class_code": "CS1010-5"
+    }
+  ],
+  "bookmarks": [
+    {
+      "user_id": "user_123",
+      "resource_id": "f-adv-web-project",
+      "createdAt": "2025-05-12T10:00:00Z"
+    },
+    {
+      "user_id": "user_123",
+      "resource_id": "f-distdb-replication",
+      "createdAt": "2025-11-06T09:00:00Z"
+    }
+  ]
+}
