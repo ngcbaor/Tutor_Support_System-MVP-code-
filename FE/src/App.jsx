@@ -13,6 +13,9 @@ import AuthCallback from './pages/public/AuthCallback'
 import StudentDashboard from './pages/student/Dashboard'
 import StudentTimetable from './pages/student/Timetable'
 import CourseList from './pages/student/CourseList'
+import CourseDetail from './pages/student/CourseDetail'
+import Registration from './pages/student/Registration'
+import RegistrationManagement from './pages/student/RegistrationManagement'
 import StudentResources from './pages/resources/StudentResources'
 
 // Tutor pages
@@ -28,7 +31,7 @@ import HcmutLibSearch from './pages/resources/hcmut_lib_search'
 // Coordinator pages
 import CoordinatorDashboard from './pages/coordinator/Dashboard'
 import LoadBalancing from './pages/coordinator/LoadBalancing'
-
+import ClassAdjustment from './pages/coordinator/ClassAdjustment';
 // Academic Affairs pages
 import AcademicAffairsDashboard from './pages/academic_affairs/Dashboard'
 import GenerateOverviewReport from './pages/academic_affairs/GenerateOverviewReport'
@@ -81,11 +84,41 @@ function App() {
             }
           />
           <Route
-            path="/student/courses"
+            path="/student/registration"
             element={
               <ProtectedRoute requiredRole="student">
                 <Layout>
                   <CourseList />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student/course/:id"
+            element={
+              <ProtectedRoute requiredRole="student">
+                <Layout>
+                  <CourseDetail />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student/registration/:id"
+            element={
+              <ProtectedRoute requiredRole="student">
+                <Layout>
+                  <Registration />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student/registration-management"
+            element={
+              <ProtectedRoute requiredRole="student">
+                <Layout>
+                  <RegistrationManagement />
                 </Layout>
               </ProtectedRoute>
             }
@@ -226,11 +259,21 @@ function App() {
             }
           />
           <Route
-            path="/coordinator/load-balancing"
+            path="/coordinator/registration"
             element={
               <ProtectedRoute requiredRole="coordinator">
                 <Layout>
                   <LoadBalancing />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/coordinator/class-adjustment/:courseId/:classId"
+            element={
+              <ProtectedRoute requiredRole="coordinator">
+                <Layout>
+                  <ClassAdjustment />
                 </Layout>
               </ProtectedRoute>
             }
