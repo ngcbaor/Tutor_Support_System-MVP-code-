@@ -113,16 +113,6 @@ function App() {
             }
           />
           <Route
-            path="/student/resources"
-            element={
-              <ProtectedRoute requiredRole="student">
-                <Layout>
-                  <Library />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
             path="/student/profile"
             element={
               <ProtectedRoute requiredRole="student">
