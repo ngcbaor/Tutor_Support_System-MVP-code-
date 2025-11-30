@@ -17,6 +17,8 @@ import CourseDetail from './pages/student/CourseDetail'
 import Registration from './pages/student/Registration'
 import RegistrationManagement from './pages/student/RegistrationManagement'
 import StudentResources from './pages/resources/StudentResources'
+import Feedback from './pages/student/Feedback'
+import FeedbackDetail from './pages/student/FeedbackDetail'
 
 // Tutor pages
 import TutorDashboard from './pages/tutor/Dashboard'
@@ -85,10 +87,11 @@ function App() {
           />
           <Route
             path="/student/registration"
+            path="/student/feedback"
             element={
               <ProtectedRoute requiredRole="student">
                 <Layout>
-                  <CourseList />
+                  <Feedback />
                 </Layout>
               </ProtectedRoute>
             }
@@ -125,10 +128,21 @@ function App() {
           />
           <Route
             path="/student/resources"
+            path="/student/feedback/:itemId"
             element={
               <ProtectedRoute requiredRole="student">
                 <Layout>
-                  <Library />
+                  <FeedbackDetail />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student/courses"
+            element={
+              <ProtectedRoute requiredRole="student">
+                <Layout>
+                  <CourseList />
                 </Layout>
               </ProtectedRoute>
             }
