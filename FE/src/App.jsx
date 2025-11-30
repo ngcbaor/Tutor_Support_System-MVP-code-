@@ -14,6 +14,8 @@ import StudentDashboard from './pages/student/Dashboard'
 import StudentTimetable from './pages/student/Timetable'
 import CourseList from './pages/student/CourseList'
 import StudentResources from './pages/resources/StudentResources'
+import Feedback from './pages/student/Feedback'
+import FeedbackDetail from './pages/student/FeedbackDetail'
 
 // Tutor pages
 import TutorDashboard from './pages/tutor/Dashboard'
@@ -76,6 +78,26 @@ function App() {
               <ProtectedRoute requiredRole="student">
                 <Layout>
                   <StudentTimetable />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student/feedback"
+            element={
+              <ProtectedRoute requiredRole="student">
+                <Layout>
+                  <Feedback />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student/feedback/:itemId"
+            element={
+              <ProtectedRoute requiredRole="student">
+                <Layout>
+                  <FeedbackDetail />
                 </Layout>
               </ProtectedRoute>
             }
