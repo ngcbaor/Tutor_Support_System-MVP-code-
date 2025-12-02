@@ -24,6 +24,12 @@ import StudentResources from './pages/resources/StudentResources'
 // Tutor pages
 import TutorDashboard from './pages/tutor/Dashboard'
 import SessionManagement from './pages/tutor/SessionManagement'
+// --- NEW TUTOR IMPORTS ---
+import SetAvailability from './pages/tutor/SetAvailability'
+import SetSchedule from './pages/tutor/SetSchedule'
+import CreateSession from './pages/tutor/CreateSession'
+import ManageMeetings from './pages/tutor/ManageMeetings'
+// -------------------------
 import CourseReport from './pages/tutor/CourseReport'
 import TutorClass from './pages/tutor/Class'
 import ClassRoster from './pages/tutor/ClassRoster'
@@ -35,6 +41,8 @@ import HcmutLibSearch from './pages/resources/hcmut_lib_search'
 import CoordinatorDashboard from './pages/coordinator/Dashboard'
 import LoadBalancing from './pages/coordinator/LoadBalancing'
 import ClassAdjustment from './pages/coordinator/ClassAdjustment';
+// --- NEW COORDINATOR IMPORT ---
+import CoordinatorManageSchedule from './pages/coordinator/ManageSchedule'
 
 // Academic Affairs pages
 import AcademicAffairsDashboard from './pages/academic_affairs/Dashboard'
@@ -211,6 +219,58 @@ function App() {
               </ProtectedRoute>
             }
           />
+          {/* --- NEW TUTOR ROUTES --- */}
+          <Route
+            path="/tutor/timetable"
+            element={
+              <ProtectedRoute requiredRole="tutor">
+                <Layout>
+                  <SessionManagement />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tutor/set-availability"
+            element={
+              <ProtectedRoute requiredRole="tutor">
+                <Layout>
+                  <SetAvailability />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tutor/set-schedule"
+            element={
+              <ProtectedRoute requiredRole="tutor">
+                <Layout>
+                  <SetSchedule />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tutor/create-session"
+            element={
+              <ProtectedRoute requiredRole="tutor">
+                <Layout>
+                  <CreateSession />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tutor/manage-meetings"
+            element={
+              <ProtectedRoute requiredRole="tutor">
+                <Layout>
+                  <ManageMeetings />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          {/* ------------------------- */}
           <Route
             path="/tutor/reports"
             element={
@@ -319,6 +379,17 @@ function App() {
               <ProtectedRoute requiredRole="coordinator">
                 <Layout>
                   <ClassAdjustment />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          {/* --- NEW COORDINATOR ROUTE --- */}
+          <Route
+            path="/coordinator/manage-schedule"
+            element={
+              <ProtectedRoute requiredRole="coordinator">
+                <Layout>
+                  <CoordinatorManageSchedule />
                 </Layout>
               </ProtectedRoute>
             }

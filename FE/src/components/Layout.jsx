@@ -172,7 +172,7 @@ function Layout({ children }) {
         { path: '/coordinator/dashboard', label: 'Dashboard', icon: dashboardIcon },
         { path: '/coordinator/profile', label: 'Profile', icon: profileIcon },
         { path: '/coordinator/registration', label: 'Registration Management', icon: registrationIcon },
-        { path: '/coordinator/schedule', label: 'Schedule Management', icon: timetableIcon }
+        { path: '/coordinator/manage-schedule', label: 'Schedule Management', icon: timetableIcon }
       ],
       academic_affairs: [
         { path: '/academic-affairs/dashboard', label: 'Dashboard', icon: dashboardIcon },
