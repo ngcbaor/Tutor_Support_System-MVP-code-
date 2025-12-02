@@ -342,28 +342,28 @@ export default function GenerateOverviewReport() {
                         <div className="text-3xl flex-shrink-0 mt-1">📊</div>
                         <div className="flex flex-col">
                           <div className="text-sm font-medium text-gray-600 mb-1.5">Scope Avg. Grade</div>
-                          <div className="text-3xl font-bold text-gray-900 leading-tight">{mockAllocationReportDetails.details.kpis.avgGrade}</div>
+                          <div className="text-3xl font-bold text-gray-900 leading-tight">{mockAllocationReportDetails.kpis.avgGrade}</div>
                         </div>
                       </div>
                       <div className="flex items-start gap-4 bg-white rounded-lg p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
                         <div className="text-3xl flex-shrink-0 mt-1">📉</div>
                         <div className="flex flex-col">
                           <div className="text-sm font-medium text-gray-600 mb-1.5">Scope Failure Rate</div>
-                          <div className="text-3xl font-bold text-amber-600 leading-tight">{mockAllocationReportDetails.details.kpis.failureRate}%</div>
+                          <div className="text-3xl font-bold text-amber-600 leading-tight">{mockAllocationReportDetails.kpis.failureRate}%</div>
                         </div>
                       </div>
                       <div className="flex items-start gap-4 bg-white rounded-lg p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
                         <div className="text-3xl flex-shrink-0 mt-1">🗣️</div>
                         <div className="flex flex-col">
                           <div className="text-sm font-medium text-gray-600 mb-1.5">Avg. Student Feedback</div>
-                          <div className="text-3xl font-bold text-gray-900 leading-tight">{mockAllocationReportDetails.details.kpis.avgFeedback}</div>
+                          <div className="text-3xl font-bold text-gray-900 leading-tight">{mockAllocationReportDetails.kpis.avgFeedback}</div>
                         </div>
                       </div>
                       <div className="flex items-start gap-4 bg-white rounded-lg p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
                         <div className="text-3xl flex-shrink-0 mt-1">🧑‍🏫</div>
                         <div className="flex flex-col">
                           <div className="text-sm font-medium text-gray-600 mb-1.5">Avg. S/T Ratio</div>
-                          <div className="text-3xl font-bold text-gray-900 leading-tight">{mockAllocationReportDetails.details.kpis.avgStudentTutorRatio}</div>
+                          <div className="text-3xl font-bold text-gray-900 leading-tight">{mockAllocationReportDetails.kpis.avgStudentTutorRatio}</div>
                         </div>
                       </div>
                     </div>
@@ -407,7 +407,7 @@ export default function GenerateOverviewReport() {
                             </tr>
                           </thead>
                           <tbody>
-                            {mockAllocationReportDetails.details.courses.map((course, idx) => (
+                            {mockAllocationReportDetails.courses.map((course, idx) => (
                               <tr key={idx} className="hover:bg-gray-50">
                                 <td className="px-4 py-3.5 text-sm border-b border-gray-200 whitespace-nowrap">
                                   {course.courseCode} - {course.courseName}
@@ -457,7 +457,7 @@ export default function GenerateOverviewReport() {
                             </tr>
                           </thead>
                           <tbody>
-                            {mockAllocationReportDetails.details.tutors.map((tutor, idx) => (
+                            {mockAllocationReportDetails.tutors.map((tutor, idx) => (
                               <tr key={idx} className="hover:bg-gray-50">
                                 <td className="px-4 py-3.5 text-sm border-b border-gray-200">{tutor.tutorName}</td>
                                 <td className="px-4 py-3.5 text-sm border-b border-gray-200 text-right">{tutor.numCourses}</td>
@@ -478,7 +478,7 @@ export default function GenerateOverviewReport() {
                         Alerts & Allocation Suggestions
                       </h4>
                       <ul className="flex flex-col gap-4">
-                        {mockAllocationReportDetails.details.alerts.map((alert, idx) => (
+                        {mockAllocationReportDetails.alerts.map((alert, idx) => (
                           <li key={idx} className={`flex items-start gap-4 p-4 px-5 rounded-lg ${
                             alert.type === 'danger' ? 'bg-red-50 border border-red-500 text-red-900' :
                             alert.type === 'warning' ? 'bg-amber-50 border border-amber-500 text-amber-900' :
@@ -529,7 +529,7 @@ export default function GenerateOverviewReport() {
                           </tr>
                         </thead>
                         <tbody>
-                          {mockAwardingReportDetails.details.students.map((student, idx) => (
+                          {mockAwardingReportDetails.students.map((student, idx) => (
                             <tr key={idx} className="hover:bg-gray-50">
                               <td className="px-4 py-3.5 text-sm border-b border-gray-200">{idx + 1}</td>
                               <td className="px-4 py-3.5 text-sm border-b border-gray-200">{student.studentId}</td>

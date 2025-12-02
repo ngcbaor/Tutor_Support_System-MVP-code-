@@ -16,9 +16,10 @@ import CourseList from './pages/student/CourseList'
 import CourseDetail from './pages/student/CourseDetail'
 import Registration from './pages/student/Registration'
 import RegistrationManagement from './pages/student/RegistrationManagement'
-import StudentResources from './pages/resources/StudentResources'
 import Feedback from './pages/student/Feedback'
 import FeedbackDetail from './pages/student/FeedbackDetail'
+import StudentResources from './pages/resources/StudentResources'
+
 
 // Tutor pages
 import TutorDashboard from './pages/tutor/Dashboard'
@@ -34,6 +35,7 @@ import HcmutLibSearch from './pages/resources/hcmut_lib_search'
 import CoordinatorDashboard from './pages/coordinator/Dashboard'
 import LoadBalancing from './pages/coordinator/LoadBalancing'
 import ClassAdjustment from './pages/coordinator/ClassAdjustment';
+
 // Academic Affairs pages
 import AcademicAffairsDashboard from './pages/academic_affairs/Dashboard'
 import GenerateOverviewReport from './pages/academic_affairs/GenerateOverviewReport'
@@ -85,8 +87,8 @@ function App() {
               </ProtectedRoute>
             }
           />
+          
           <Route
-            path="/student/registration"
             path="/student/feedback"
             element={
               <ProtectedRoute requiredRole="student">
@@ -97,37 +99,6 @@ function App() {
             }
           />
           <Route
-            path="/student/course/:id"
-            element={
-              <ProtectedRoute requiredRole="student">
-                <Layout>
-                  <CourseDetail />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/student/registration/:id"
-            element={
-              <ProtectedRoute requiredRole="student">
-                <Layout>
-                  <Registration />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/student/registration-management"
-            element={
-              <ProtectedRoute requiredRole="student">
-                <Layout>
-                  <RegistrationManagement />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/student/resources"
             path="/student/feedback/:itemId"
             element={
               <ProtectedRoute requiredRole="student">
@@ -147,12 +118,43 @@ function App() {
               </ProtectedRoute>
             }
           />
+
           <Route
-            path="/student/profile"
+            path="/student/registration"
             element={
               <ProtectedRoute requiredRole="student">
                 <Layout>
-                  <Profile />
+                  <CourseList /> 
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student/registration/:id"
+            element={
+              <ProtectedRoute requiredRole="student">
+                <Layout>
+                  <Registration />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/student/course/:id"
+            element={
+              <ProtectedRoute requiredRole="student">
+                <Layout>
+                  <CourseDetail />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student/registration-management"
+            element={
+              <ProtectedRoute requiredRole="student">
+                <Layout>
+                  <RegistrationManagement />
                 </Layout>
               </ProtectedRoute>
             }
@@ -162,7 +164,27 @@ function App() {
             element={
               <ProtectedRoute requiredRole="student">
                 <Layout>
-                  <StudentResources />
+                  <Library /> 
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/student/learning-resources"
+            element={
+              <ProtectedRoute requiredRole="student">
+                <Layout>
+                   <StudentResources />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student/profile"
+            element={
+              <ProtectedRoute requiredRole="student">
+                <Layout>
+                  <Profile />
                 </Layout>
               </ProtectedRoute>
             }
@@ -239,7 +261,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/tutor/resources"
             element={
@@ -268,6 +289,16 @@ function App() {
               <ProtectedRoute requiredRole="coordinator">
                 <Layout>
                   <CoordinatorDashboard />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/coordinator/load-balancing"
+            element={
+              <ProtectedRoute requiredRole="coordinator">
+                <Layout>
+                  <LoadBalancing />
                 </Layout>
               </ProtectedRoute>
             }
@@ -388,6 +419,16 @@ function App() {
               </ProtectedRoute>
             }
           />
+            <Route
+              path="/academic-department/performance"
+              element={
+                <ProtectedRoute requiredRole="academic_department">
+                  <Layout>
+                    <MonitorStudentPerformance />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
           <Route
             path="/academic-department/profile"
             element={

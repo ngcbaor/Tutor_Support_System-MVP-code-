@@ -116,7 +116,7 @@ export const mockProgressNotes = [
     id: 1,
     studentId: '2352109',
     date: '2025-10-24',
-    author: 'TS. Trần Thị B',
+    author: 'TS.Lê Nguyễn Bảo Minh',
     comment: 'Bao showed excellent understanding of React Hooks this session. Struggled slightly with async state management, but grasped the concept after a review. Homework was complete and well-done.',
     rubrics: {
       topicMastery: 4,
@@ -134,7 +134,7 @@ export const mockProgressNotes = [
     id: 2,
     studentId: '2352109',
     date: '2025-10-15',
-    author: 'TS. Trần Thị B',
+    author: 'TS.Lê Nguyễn Bảo Minh',
     comment: 'Good progress on basic CSS flexbox. Needs to review grid layouts for next time. Participation was a bit low today.',
     rubrics: {
       topicMastery: 3,

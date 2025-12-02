@@ -23,9 +23,9 @@ export const mockCourses = [
     credits: 3,
     prerequisites: ["CO1023"],
     description: "Introduction to database concepts, relational models, SQL, and database design.",
-    tutorsInCharge: ["Tran Thi B"],
+    tutorsInCharge: ["Lê Nguyễn Bảo Minh"],
     classes: [
-      { id: "L01", tutor: "Tran Thi B", role: "Lecturer", time: "Tue 09:00-11:00", rating: 4.6, reviewCount: 15, enrolled: 10, max: 40 },
+      { id: "L01", tutor: "Lê Nguyễn Bảo Minh", role: "Lecturer", time: "Tue 09:00-11:00", rating: 4.6, reviewCount: 15, enrolled: 10, max: 40 },
     ]
   },
   {
