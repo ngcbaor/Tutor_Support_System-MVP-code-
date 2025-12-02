@@ -18,7 +18,7 @@ export const mockRegistrations = [
         courseId: "CO2013",
         courseName: "Database Systems",
         classId: "L01",
-        tutor: "Tran Thi B",
+        tutor: "Lê Nguyễn Bảo Minh",
         role: "Lecturer",
         time: "Tue 09:00-11:00",
         status: "Registered"

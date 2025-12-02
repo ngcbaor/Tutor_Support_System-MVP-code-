@@ -169,38 +169,41 @@ export const mockAllocationReportDetails = {
   courses: [
     {
       id: 1,
-      name: 'IT4409 - Adv. Web Prog.',
-      enrollment: 65,
-      sections: 3,
+      courseCode: 'IT4409',
+      courseName: 'Adv. Web Prog.',
+      totalStudents: 65,
+      numSections: 3,
       avgPerSection: 21.7,
       avgGrade: 8.2,
       failureRate: 5,
       avgFeedback: 4.5,
-      tutors: 2,
+      numTutors: 2,
       studentTutorRatio: 32.5
     },
     {
       id: 2,
-      name: 'IT4083 - Dist. DB',
-      enrollment: 48,
-      sections: 2,
+      courseCode: 'IT4083',
+      courseName: 'Dist. DB',
+      totalStudents: 48,
+      numSections: 2,
       avgPerSection: 24.0,
       avgGrade: 7.5,
       failureRate: 10,
       avgFeedback: 4.1,
-      tutors: 1,
+      numTutors: 1,
       studentTutorRatio: 48.0
     },
     {
       id: 3,
-      name: 'CS1010 - Intro to AI',
-      enrollment: 112,
-      sections: 3,
+      courseCode: 'CS1010',
+      courseName: 'Intro to AI',
+      totalStudents: 112,
+      numSections: 3,
       avgPerSection: 37.3,
       avgGrade: 6.9,
       failureRate: 18,
       avgFeedback: 3.8,
-      tutors: 3,
+      numTutors: 3,
       studentTutorRatio: 37.3,
       warning: true
     }
@@ -208,22 +211,22 @@ export const mockAllocationReportDetails = {
   tutors: [
     {
       id: 1,
-      name: 'Tran Ngoc Bao',
-      courses: 2,
+      tutorName: 'Tran Ngoc Bao',
+      numCourses: 2,
       totalStudents: 177,
       avgFeedback: 4.1
     },
     {
       id: 2,
-      name: 'Nguyen Van B',
-      courses: 1,
+      tutorName: 'Nguyen Van B',
+      numCourses: 1,
       totalStudents: 48,
       avgFeedback: 4.5
     },
     {
       id: 3,
-      name: 'Le Thi C',
-      courses: 1,
+      tutorName: 'Le Thi C',
+      numCourses: 1,
       totalStudents: 112,
       avgFeedback: 3.9,
       warning: true
@@ -377,7 +380,7 @@ export function getAllocationReportDetails(reportId) {
   
   return {
     ...report,
-    details: mockAllocationReportDetails
+    details: mockAllocationReportDetails // Gán trực tiếp data phẳng vào key 'details'
   };
 }
 
@@ -394,7 +397,7 @@ export function getAwardingReportDetails(reportId) {
   
   return {
     ...report,
-    details: mockAwardingReportDetails
+    details: mockAwardingReportDetails // Gán trực tiếp data phẳng vào key 'details'
   };
 }
 
