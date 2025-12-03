@@ -172,7 +172,7 @@ function App() {
             element={
               <ProtectedRoute requiredRole="student">
                 <Layout>
-                  <Library /> 
+                  <StudentResources /> 
                 </Layout>
               </ProtectedRoute>
             }
