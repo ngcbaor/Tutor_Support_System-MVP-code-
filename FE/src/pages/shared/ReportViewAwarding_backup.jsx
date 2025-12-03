@@ -166,7 +166,7 @@ export default function ReportViewAwarding() {
           </label>
           <select
             id="report-format"
-            className="py-2 px-3 pr-8 text-sm border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-[url('data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20fill=%27none%27%20viewBox=%270%200%2020%2020%27%3e%3cpath%20stroke=%27%236b7280%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27%20stroke-width=%271.5%27%20d=%27M6%208l4%204%204-4%27/%3e%3c/svg%3e')] bg-[length:1.2em_1.2em] bg-[right_0.5rem_center] bg-no-repeat min-w-[100px]"
+            className="py-2 px-3 pr-8 text-sm border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-[url('data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20fill=%27none%27%20viewBox=%270%200%2020%2020%27%3e%3cpath%20stroke=%27%236b7280%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27%20stroke-width=%271.5%27%20d=%27M6%208l4%204%204-4%27/%3e%3c/svg%3e')] bg-size-[1.2em_1.2em] bg-position-[right_0.5rem_center] bg-no-repeat min-w-[100px]"
           >
             <option value="pdf">PDF</option>
             <option value="csv">CSV</option>
@@ -183,67 +183,61 @@ export default function ReportViewAwarding() {
 
       {/* Exportable Report Content */}
       <div id="awarding-report-content">
-        {/* Report Header */}
-        <div className="mb-8 pb-4 border-b border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-900">Student Academic Summary Report</h2>
-          <p className="text-sm text-gray-600 mt-1">
-            {scope} | {term} | Generated on {dateGenerated}
-          </p>
-        </div>
+      {/* Report Header */}
+      <div className="mb-8 pb-4 border-b border-gray-200">
+        <h2 className="text-2xl font-bold text-gray-900">Student Academic Summary Report</h2>
+        <p className="text-sm text-gray-600 mt-1">
+          {scope} | {term} | Generated on {dateGenerated}
+        </p>
+      </div>
 
-        {/* Student List Summary */}
-        <div className="mb-8">
-          <h4 className="text-lg font-semibold mb-5 text-gray-900 pb-2.5 border-b border-gray-200">
-            Student List Summary
-          </h4>
-          <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-            <table className="w-full">
-              <thead>
-                <tr className="bg-gray-50">
-                  <th className="px-5 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase">No.</th>
-                  <th className="px-5 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase">Student ID</th>
-                  <th className="px-5 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase">Full Name</th>
-                  <th className="px-5 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase">
-                    Term GPA (4.0) <span className="text-blue-600 ml-1">ℹ️</span>
-                  </th>
-                  <th className="px-5 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase">
-                    Term GPA (10.0) <span className="text-blue-600 ml-1">ℹ️</span>
-                  </th>
-                  <th className="px-5 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase">Avg. Tutor Assessment</th>
+      {/* Student List Summary */}
+      <div>
+        <h4 className="text-lg font-semibold mb-5 pb-2.5 border-b border-gray-200 text-gray-900">
+          Student List Summary
+        </h4>
+        <div className="overflow-x-auto border border-gray-200 rounded-lg bg-white shadow-sm">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-gray-50">
+                <th className="px-4 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase border-b border-gray-200">
+                  No.
+                </th>
+                <th className="px-4 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase border-b border-gray-200">
+                  Student ID
+                </th>
+                <th className="px-4 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase border-b border-gray-200">
+                  Full Name
+                </th>
+                <th className="px-4 py-3.5 text-right text-xs font-semibold text-gray-600 uppercase border-b border-gray-200">
+                  Term GPA (4.0) <span className="opacity-40 text-xs ml-1">↕️</span>
+                </th>
+                <th className="px-4 py-3.5 text-right text-xs font-semibold text-gray-600 uppercase border-b border-gray-200">
+                  Term GPA (10.0) <span className="opacity-40 text-xs ml-1">↕️</span>
+                </th>
+                <th className="px-4 py-3.5 text-right text-xs font-semibold text-gray-600 uppercase border-b border-gray-200">
+                  Avg. Tutor Assessment
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {students.map((student, idx) => (
+                <tr key={idx} className="hover:bg-gray-50">
+                  <td className="px-4 py-3.5 text-sm border-b border-gray-200">{idx + 1}</td>
+                  <td className="px-4 py-3.5 text-sm border-b border-gray-200">{student.studentId}</td>
+                  <td className="px-4 py-3.5 text-sm border-b border-gray-200">{student.fullName}</td>
+                  <td className="px-4 py-3.5 text-sm border-b border-gray-200 text-right font-semibold text-blue-600">
+                    {student.gpa4}
+                  </td>
+                  <td className="px-4 py-3.5 text-sm border-b border-gray-200 text-right font-semibold">{student.gpa10}</td>
+                  <td className="px-4 py-3.5 text-sm border-b border-gray-200 text-right font-semibold">
+                    {student.avgTutorAssessment}
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {students && students.map((student, index) => (
-                  <tr key={student.studentId || student.id} className="hover:bg-gray-50">
-                    <td className="px-5 py-3 text-sm text-gray-900">{index + 1}</td>
-                    <td className="px-5 py-3 text-sm text-gray-900">{student.studentId || student.id}</td>
-                    <td className="px-5 py-3 text-sm text-gray-900">{student.fullName || student.name}</td>
-                    <td className="px-5 py-3 text-sm">
-                      <span className={`font-medium ${
-                        (student.gpa4 || student.termGPA40) >= 3.5 ? 'text-green-700' : 
-                        (student.gpa4 || student.termGPA40) >= 2.5 ? 'text-blue-700' : 'text-red-700'
-                      }`}>
-                        {student.gpa4 || student.termGPA40}
-                      </span>
-                    </td>
-                    <td className="px-5 py-3 text-sm">
-                      <span className={`font-medium ${
-                        (student.gpa10 || student.termGPA100) >= 8.5 ? 'text-green-700' : 
-                        (student.gpa10 || student.termGPA100) >= 6.5 ? 'text-blue-700' : 'text-red-700'
-                      }`}>
-                        {student.gpa10 || student.termGPA100}
-                      </span>
-                    </td>
-                    <td className="px-5 py-3 text-sm text-gray-900">
-                      {student.avgTutorAssessment}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         </div>
-      {/* End Exportable Content */}
       </div>
     </div>
   );

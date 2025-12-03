@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import { 
   mockAwardingReports,
   termOptions,
@@ -13,9 +15,64 @@ export default function ReportList() {
   const [filterFaculty, setFilterFaculty] = useState('cs');
   const [filterProgram, setFilterProgram] = useState('all');
   const [filterCohort, setFilterCohort] = useState('all');
+  const [isExporting, setIsExporting] = useState(false);
 
-  const handleDownload = () => {
-    alert('Simulating report download...');
+  const handleDownload = async (reportData) => {
+    setIsExporting(true);
+    
+    try {
+      // Simple PDF generation without html2canvas complexity
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      
+      // Add title
+      pdf.setFontSize(20);
+      pdf.setFont(undefined, 'bold');
+      pdf.text('Student Academic Summary Report', 20, 30);
+      
+      // Add date
+      pdf.setFontSize(12);
+      pdf.setFont(undefined, 'normal');
+      pdf.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 45);
+      
+      // Add line
+      pdf.line(20, 55, 190, 55);
+      
+      // Add report details
+      pdf.setFontSize(14);
+      pdf.setFont(undefined, 'bold');
+      pdf.text('Report Details', 20, 70);
+      
+      pdf.setFontSize(11);
+      pdf.setFont(undefined, 'normal');
+      pdf.text(`Term: ${reportData.term}`, 20, 85);
+      pdf.text(`Faculty: ${reportData.faculty}`, 20, 95);
+      pdf.text(`Program: ${reportData.program}`, 20, 105);
+      pdf.text(`Generated: ${reportData.generatedDate}`, 20, 115);
+      
+      // Add scope
+      pdf.text(`Scope: ${reportData.scope}`, 20, 130);
+      
+      // Add summary
+      pdf.setFontSize(12);
+      pdf.setFont(undefined, 'bold');
+      pdf.text('Summary:', 20, 150);
+      
+      pdf.setFontSize(10);
+      pdf.setFont(undefined, 'normal');
+      const summaryText = 'This student academic summary report contains detailed analysis for scholarship and conduct point evaluation. Please refer to the full system for complete data visualization and interactive features.';
+      const splitSummary = pdf.splitTextToSize(summaryText, 170);
+      pdf.text(splitSummary, 20, 165);
+      
+      const fileName = `Student_Academic_Summary_${new Date().toISOString().split('T')[0]}.pdf`;
+      pdf.save(fileName);
+      
+      alert('Report downloaded successfully!');
+    } catch (error) {
+      console.error('Export failed:', error);
+      alert(`Export failed: ${error.message || 'Unknown error'}. Please try again.`);
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   // Filter reports based on selected criteria
@@ -166,10 +223,23 @@ export default function ReportList() {
                           View
                         </Link>
                         <button
-                          onClick={handleDownload}
-                          className="px-3 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 hover:-translate-y-0.5 hover:shadow-lg transition-all"
+                          onClick={() => handleDownload(report)}
+                          disabled={isExporting}
+                          className="px-3 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 hover:-translate-y-0.5 hover:shadow-lg transition-all disabled:bg-gray-400 disabled:cursor-not-allowed inline-flex items-center gap-1"
                         >
-                          Download
+                          {isExporting ? (
+                            <>
+                              <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                              <span>Exporting...</span>
+                            </>
+                          ) : (
+                            <>
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                              </svg>
+                              Download
+                            </>
+                          )}
                         </button>
                       </div>
                     </td>

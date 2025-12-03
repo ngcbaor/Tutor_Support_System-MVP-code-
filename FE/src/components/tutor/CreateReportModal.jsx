@@ -1,7 +1,11 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
+import html2canvas from 'html2canvas'
+import jsPDF from 'jspdf'
 
 function CreateReportModal({ isOpen, onClose, student, progressNotes, averageRubrics }) {
   const [step, setStep] = useState(1)
+  const [isExporting, setIsExporting] = useState(false)
+  const reportRef = useRef(null)
   const [formData, setFormData] = useState({
     startDate: '',
     endDate: new Date().toISOString().split('T')[0],
@@ -39,15 +43,130 @@ function CreateReportModal({ isOpen, onClose, student, progressNotes, averageRub
     setStep(1)
   }
 
-  const handleExport = () => {
-    alert('Exporting report as PDF/CSV...')
-    onClose()
-    setStep(1)
-    setFormData({
-      startDate: '',
-      endDate: new Date().toISOString().split('T')[0],
-      comment: ''
-    })
+  const handleExport = async () => {
+    const reportElement = document.getElementById('report-preview-content')
+    if (!reportElement) {
+      alert('Report content not found. Please try again.')
+      return
+    }
+    
+    setIsExporting(true)
+    
+    try {
+      // Clone the element first to avoid modifying the original preview
+      const clonedElement = reportElement.cloneNode(true)
+      clonedElement.id = 'report-preview-content-clone'
+      
+      // Create a comprehensive style override for the CLONED element only
+      const printStyle = document.createElement('style')
+      printStyle.textContent = `
+        #report-preview-content-clone,
+        #report-preview-content-clone * {
+          color: #000000 !important;
+          background-color: #ffffff !important;
+          background-image: none !important;
+          border-color: #cccccc !important;
+          box-shadow: none !important;
+          text-shadow: none !important;
+          background: #ffffff !important;
+        }
+        
+        /* Override all Tailwind background classes for clone only */
+        #report-preview-content-clone .bg-gray-50 { background-color: #f9f9f9 !important; }
+        #report-preview-content-clone .bg-gray-100 { background-color: #f3f3f3 !important; }
+        #report-preview-content-clone .bg-gray-200 { background-color: #e5e5e5 !important; }
+        #report-preview-content-clone .bg-white { background-color: #ffffff !important; }
+        #report-preview-content-clone .bg-blue-50 { background-color: #f0f9ff !important; }
+        #report-preview-content-clone .bg-blue-600 { background-color: #dddddd !important; }
+        #report-preview-content-clone .bg-green-600 { background-color: #dddddd !important; }
+        #report-preview-content-clone .bg-yellow-600 { background-color: #dddddd !important; }
+        #report-preview-content-clone .bg-red-600 { background-color: #dddddd !important; }
+        
+        /* Override all Tailwind text color classes for clone only */
+        #report-preview-content-clone .text-gray-600 { color: #666666 !important; }
+        #report-preview-content-clone .text-gray-700 { color: #555555 !important; }
+        #report-preview-content-clone .text-gray-800 { color: #333333 !important; }
+        #report-preview-content-clone .text-gray-900 { color: #111111 !important; }
+        #report-preview-content-clone .text-blue-600 { color: #000000 !important; font-weight: bold !important; }
+        #report-preview-content-clone .text-green-600 { color: #000000 !important; font-weight: bold !important; }
+        #report-preview-content-clone .text-yellow-600 { color: #000000 !important; font-weight: bold !important; }
+        #report-preview-content-clone .text-red-600 { color: #000000 !important; font-weight: bold !important; }
+        
+        /* Override all Tailwind border classes for clone only */
+        #report-preview-content-clone .border { border: 1px solid #cccccc !important; }
+        #report-preview-content-clone .border-gray-200 { border-color: #e5e5e5 !important; }
+        #report-preview-content-clone .border-gray-300 { border-color: #cccccc !important; }
+        #report-preview-content-clone .border-blue-600 { border-color: #999999 !important; }
+        
+        /* Remove any CSS custom properties that might contain oklch for clone only */
+        #report-preview-content-clone * {
+          --tw-bg-opacity: 1 !important;
+          --tw-text-opacity: 1 !important;
+          --tw-border-opacity: 1 !important;
+        }
+      `
+      document.head.appendChild(printStyle)
+      document.body.appendChild(clonedElement)
+      
+      // Wait for styles to apply
+      await new Promise(resolve => setTimeout(resolve, 500))
+      
+      const canvas = await html2canvas(clonedElement, {
+        scale: 1.2,
+        useCORS: true,
+        allowTaint: false,
+        backgroundColor: '#ffffff',
+        logging: false,
+        width: clonedElement.scrollWidth,
+        height: clonedElement.scrollHeight
+      })
+      
+      // Clean up
+      document.body.removeChild(clonedElement)
+      document.head.removeChild(printStyle)
+      
+      if (!canvas || canvas.width === 0 || canvas.height === 0) {
+        throw new Error('Canvas generation failed - no content captured')
+      }
+      
+      const imgData = canvas.toDataURL('image/png', 0.9)
+      const pdf = new jsPDF('p', 'mm', 'a4')
+      
+      const pdfWidth = pdf.internal.pageSize.getWidth()
+      const pdfHeight = pdf.internal.pageSize.getHeight()
+      const imgWidth = canvas.width
+      const imgHeight = canvas.height
+      
+      // Calculate scaling to fit page
+      const widthRatio = (pdfWidth - 20) / imgWidth
+      const heightRatio = (pdfHeight - 20) / imgHeight
+      const ratio = Math.min(widthRatio, heightRatio)
+      
+      const finalWidth = imgWidth * ratio
+      const finalHeight = imgHeight * ratio
+      const xOffset = (pdfWidth - finalWidth) / 2
+      const yOffset = 10
+      
+      pdf.addImage(imgData, 'PNG', xOffset, yOffset, finalWidth, finalHeight)
+      
+      // Generate filename with student name and date
+      const fileName = `Student_Report_${student.name.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`
+      pdf.save(fileName)
+      
+      alert('Report exported successfully!')
+      onClose()
+      setStep(1)
+      setFormData({
+        startDate: '',
+        endDate: new Date().toISOString().split('T')[0],
+        comment: ''
+      })
+    } catch (error) {
+      console.error('Export failed:', error)
+      alert(`Export failed: ${error.message}. Please try again.`)
+    } finally {
+      setIsExporting(false)
+    }
   }
 
   const handleClose = () => {
@@ -145,7 +264,7 @@ function CreateReportModal({ isOpen, onClose, student, progressNotes, averageRub
                     2. Preview Report
                   </h3>
 
-                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-8">
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-8" id="report-preview-content" ref={reportRef}>
                     {/* Report Header */}
                     <div className="border-b border-gray-300 pb-4 mb-6">
                       <h2 className="text-xl font-bold text-gray-900">Student Progress Report</h2>
@@ -288,9 +407,22 @@ function CreateReportModal({ isOpen, onClose, student, progressNotes, averageRub
                   </button>
                   <button
                     onClick={handleExport}
-                    className="px-5 py-2.5 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+                    disabled={isExporting}
+                    className="px-5 py-2.5 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed inline-flex items-center gap-2"
                   >
-                    Export as PDF/CSV
+                    {isExporting ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        Exporting...
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Download PDF
+                      </>
+                    )}
                   </button>
                 </>
               )}

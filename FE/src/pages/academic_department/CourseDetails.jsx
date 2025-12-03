@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import { mockCourseDetails } from '../../data/mockReports';
 
 export default function CourseDetails() {
@@ -13,6 +15,7 @@ export default function CourseDetails() {
   const [courseData, setCourseData] = useState(null);
   const [selectAll, setSelectAll] = useState(false);
   const [selectedStudents, setSelectedStudents] = useState(new Set());
+  const [isExporting, setIsExporting] = useState(false);
 
   useEffect(() => {
     // Load course data
@@ -48,9 +51,80 @@ export default function CourseDetails() {
     alert(`Simulating notification for tutor(s) of ${count} selected student(s)...`);
   };
 
-  const handleExportList = () => {
+  const handleExportList = async () => {
     const count = selectedStudents.size;
-    alert(`Simulating export for ${count} selected student(s)...`);
+    if (count === 0) {
+      alert('Please select at least one student to export.');
+      return;
+    }
+
+    setIsExporting(true);
+    
+    try {
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      
+      // Add title
+      pdf.setFontSize(20);
+      pdf.setFont(undefined, 'bold');
+      pdf.text(`${courseData.code} - Student List`, 20, 30);
+      
+      // Add course info
+      pdf.setFontSize(12);
+      pdf.setFont(undefined, 'normal');
+      pdf.text(`Course: ${courseData.name}`, 20, 45);
+      pdf.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 55);
+      pdf.text(`Selected students: ${count}/${courseData.students.length}`, 20, 65);
+      
+      // Add line
+      pdf.line(20, 75, 190, 75);
+      
+      // Add student list header
+      pdf.setFontSize(14);
+      pdf.setFont(undefined, 'bold');
+      pdf.text('Student List', 20, 90);
+      
+      // Add table headers
+      pdf.setFontSize(10);
+      pdf.setFont(undefined, 'bold');
+      pdf.text('ID', 20, 105);
+      pdf.text('Name', 45, 105);
+      pdf.text('Grade', 100, 105);
+      pdf.text('Attendance', 125, 105);
+      pdf.text('Status', 160, 105);
+      
+      // Add line under headers
+      pdf.line(20, 108, 190, 108);
+      
+      // Add student data
+      pdf.setFont(undefined, 'normal');
+      let yPosition = 120;
+      const selectedStudentsList = courseData.students.filter(student => selectedStudents.has(student.id));
+      
+      selectedStudentsList.forEach((student, index) => {
+        if (yPosition > 270) { // Start new page if needed
+          pdf.addPage();
+          yPosition = 30;
+        }
+        
+        pdf.text(student.id, 20, yPosition);
+        pdf.text(student.name, 45, yPosition);
+        pdf.text(student.grade.toString(), 100, yPosition);
+        pdf.text(`${student.attendance}%`, 125, yPosition);
+        pdf.text(student.status, 160, yPosition);
+        
+        yPosition += 12;
+      });
+      
+      const fileName = `${courseData.code}_StudentList_${new Date().toISOString().split('T')[0]}.pdf`;
+      pdf.save(fileName);
+      
+      alert(`Student list exported successfully! (${count} students)`);
+    } catch (error) {
+      console.error('Export failed:', error);
+      alert('Export failed. Please try again.');
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   if (!courseData) {
@@ -177,14 +251,14 @@ export default function CourseDetails() {
             </button>
             <button
               onClick={handleExportList}
-              disabled={selectedStudents.size === 0}
+              disabled={selectedStudents.size === 0 || isExporting}
               className={`inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
-                selectedStudents.size === 0
+                selectedStudents.size === 0 || isExporting
                   ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                   : 'bg-green-600 text-white hover:bg-green-700'
               }`}
             >
-              <i className="fas fa-file-excel"></i> Export List
+              <i className="fas fa-file-excel"></i> {isExporting ? 'Exporting...' : 'Export List'}
             </button>
           </div>
         </div>

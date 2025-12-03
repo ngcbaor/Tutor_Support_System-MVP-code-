@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-function RecordProgressModal({ isOpen, onClose, student }) {
+function RecordProgressModal({ isOpen, onClose, student, onProgressSaved }) {
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split('T')[0],
     topicMastery: null,
@@ -49,6 +49,30 @@ function RecordProgressModal({ isOpen, onClose, student }) {
     if (!formData.date || !hasAllRubrics || !formData.comment.trim()) {
       alert('Please fill in all required fields.')
       return
+    }
+
+    // Create new progress note
+    const newProgressNote = {
+      id: Date.now(), // Simple ID for demo
+      date: formData.date,
+      author: 'Nguyễn Văn A', // In real app, this would be from auth
+      comment: formData.comment,
+      rubrics: {
+        topicMastery: formData.topicMastery,
+        problemSolving: formData.problemSolving,
+        participation: formData.participation,
+        studySkills: formData.studySkills,
+        homework: formData.homework
+      },
+      evidence: formData.files.map(file => ({
+        name: file.name,
+        type: file.type.includes('pdf') ? 'pdf' : 'image'
+      }))
+    }
+
+    // Call the callback to update parent state
+    if (onProgressSaved) {
+      onProgressSaved(newProgressNote)
     }
 
     alert('Progress recorded successfully!')

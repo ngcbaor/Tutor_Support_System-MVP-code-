@@ -1,12 +1,129 @@
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import { getAllocationReportDetails } from '../../data/mockReports';
 
 export default function ReportViewAllocation() {
   const { reportId } = useParams();
   const navigate = useNavigate();
+  const [isExporting, setIsExporting] = useState(false);
 
-  const handleDownload = () => {
-    alert('Simulating report download...');
+  const handleDownload = async () => {
+    const reportElement = document.getElementById('allocation-report-content')
+    if (!reportElement) {
+      alert('Report content not found. Please try again.')
+      return
+    }
+    
+    const format = document.getElementById('report-format')?.value || 'pdf';
+    setIsExporting(true)
+    
+    try {
+      if (format === 'pdf') {
+        // Clone the element first to avoid modifying the original preview
+        const clonedElement = reportElement.cloneNode(true)
+        clonedElement.id = 'allocation-report-content-clone'
+        
+        // Create a comprehensive style override for the CLONED element only
+        const printStyle = document.createElement('style')
+        printStyle.textContent = `
+          #allocation-report-content-clone,
+          #allocation-report-content-clone * {
+            color: #000000 !important;
+            background-color: #ffffff !important;
+            background-image: none !important;
+            border-color: #cccccc !important;
+            box-shadow: none !important;
+            text-shadow: none !important;
+            background: #ffffff !important;
+          }
+          
+          /* Override all Tailwind background classes for clone only */
+          #allocation-report-content-clone .bg-gray-50 { background-color: #f9f9f9 !important; }
+          #allocation-report-content-clone .bg-gray-100 { background-color: #f3f3f3 !important; }
+          #allocation-report-content-clone .bg-white { background-color: #ffffff !important; }
+          #allocation-report-content-clone .bg-amber-50 { background-color: #fffbeb !important; }
+          #allocation-report-content-clone .bg-green-50 { background-color: #f0fdf4 !important; }
+          
+          /* Override all Tailwind text color classes for clone only */
+          #allocation-report-content-clone .text-gray-600 { color: #666666 !important; }
+          #allocation-report-content-clone .text-gray-700 { color: #555555 !important; }
+          #allocation-report-content-clone .text-gray-900 { color: #111111 !important; }
+          #allocation-report-content-clone .text-amber-600 { color: #000000 !important; font-weight: bold !important; }
+          #allocation-report-content-clone .text-green-600 { color: #000000 !important; font-weight: bold !important; }
+          #allocation-report-content-clone .text-blue-600 { color: #000000 !important; font-weight: bold !important; }
+          
+          /* Override all Tailwind border classes for clone only */
+          #allocation-report-content-clone .border { border: 1px solid #cccccc !important; }
+          #allocation-report-content-clone .border-gray-200 { border-color: #e5e5e5 !important; }
+        `
+        document.head.appendChild(printStyle)
+        document.body.appendChild(clonedElement)
+        
+        // Wait for styles to apply
+        await new Promise(resolve => setTimeout(resolve, 500))
+        
+        const canvas = await html2canvas(clonedElement, {
+          scale: 1.2,
+          useCORS: true,
+          allowTaint: false,
+          backgroundColor: '#ffffff',
+          logging: false,
+          width: clonedElement.scrollWidth,
+          height: clonedElement.scrollHeight
+        })
+        
+        // Clean up
+        document.body.removeChild(clonedElement)
+        document.head.removeChild(printStyle)
+        
+        if (!canvas || canvas.width === 0 || canvas.height === 0) {
+          throw new Error('Canvas generation failed - no content captured')
+        }
+        
+        const imgData = canvas.toDataURL('image/png', 0.9)
+        const pdf = new jsPDF('p', 'mm', 'a4')
+        
+        const pdfWidth = pdf.internal.pageSize.getWidth()
+        const pdfHeight = pdf.internal.pageSize.getHeight()
+        const imgWidth = canvas.width
+        const imgHeight = canvas.height
+        
+        // Better scaling calculation
+        const widthRatio = (pdfWidth - 20) / imgWidth
+        const heightRatio = (pdfHeight - 20) / imgHeight
+        const ratio = Math.min(widthRatio, heightRatio)
+        
+        const finalWidth = imgWidth * ratio
+        const finalHeight = imgHeight * ratio
+        const xOffset = (pdfWidth - finalWidth) / 2
+        const yOffset = 10
+        
+        pdf.addImage(imgData, 'PNG', xOffset, yOffset, finalWidth, finalHeight)
+        
+        const fileName = `Resource_Allocation_Report_${reportId}_${new Date().toISOString().split('T')[0]}.pdf`
+        pdf.save(fileName)
+      } else {
+        // Simple CSV export
+        const csvContent = 'Report Type,Generated Date,Status\n' + 
+          `Resource Allocation,${new Date().toLocaleDateString()},Generated`;
+        const blob = new Blob([csvContent], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Resource_Allocation_Report_${reportId}_${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+      
+      alert('Report downloaded successfully!');
+    } catch (error) {
+      console.error('Export failed:', error)
+      alert(`Export failed: ${error.message || 'Unknown error'}. Please try again.`)
+    } finally {
+      setIsExporting(false)
+    }
   };
 
   // Get report data from mock data
@@ -59,12 +176,15 @@ export default function ReportViewAllocation() {
         </div>
         <button
           onClick={handleDownload}
-          className="px-5 py-2 text-sm font-semibold text-white bg-green-600 rounded-lg hover:bg-green-700 hover:-translate-y-0.5 hover:shadow-lg transition-all"
+          disabled={isExporting}
+          className="px-5 py-2 text-sm font-semibold text-white bg-green-600 rounded-lg hover:bg-green-700 hover:-translate-y-0.5 hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Download
+          {isExporting ? 'Exporting...' : 'Download'}
         </button>
       </div>
 
+      {/* Exportable Report Content */}
+      <div id="allocation-report-content">
       {/* Report Header */}
       <div className="mb-8 pb-4 border-b border-gray-200">
         <h2 className="text-2xl font-bold text-gray-900">Resource Allocation Report</h2>
@@ -231,6 +351,8 @@ export default function ReportViewAllocation() {
             </li>
           ))}
         </ul>
+      </div>
+      {/* End Exportable Content */}
       </div>
     </div>
   );

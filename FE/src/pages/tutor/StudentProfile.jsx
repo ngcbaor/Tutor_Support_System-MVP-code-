@@ -7,11 +7,17 @@ import CreateReportModal from '../../components/tutor/CreateReportModal'
 function StudentProfile() {
   const { classId, studentId } = useParams()
   const student = getStudentById(studentId)
-  const progressNotes = getProgressNotesByStudentId(studentId)
+  const initialProgressNotes = getProgressNotesByStudentId(studentId)
+  
+  const [progressNotes, setProgressNotes] = useState(initialProgressNotes)
   const averageRubrics = calculateAverageRubrics(progressNotes)
   
   const [isProgressModalOpen, setIsProgressModalOpen] = useState(false)
   const [isReportModalOpen, setIsReportModalOpen] = useState(false)
+
+  const handleProgressSaved = (newProgressNote) => {
+    setProgressNotes(prev => [newProgressNote, ...prev])
+  }
 
   if (!student) {
     return <div className="text-center py-12">Student not found</div>
@@ -260,6 +266,7 @@ function StudentProfile() {
         isOpen={isProgressModalOpen}
         onClose={() => setIsProgressModalOpen(false)}
         student={student}
+        onProgressSaved={handleProgressSaved}
       />
       
       <CreateReportModal

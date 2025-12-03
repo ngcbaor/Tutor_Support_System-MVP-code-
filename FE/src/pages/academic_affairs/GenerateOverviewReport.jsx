@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import { 
   mockAllocationReportDetails, 
   mockAwardingReportDetails,
@@ -15,6 +17,8 @@ export default function GenerateOverviewReport() {
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [modalReportScope, setModalReportScope] = useState('');
   const [modalGeneratedDate, setModalGeneratedDate] = useState('');
+  const [isExporting, setIsExporting] = useState(false);
+  const reportRef = useRef(null);
 
   // Form state for Resource Allocation
   const [resTerm, setResTerm] = useState('sem1-2025');
@@ -89,10 +93,136 @@ export default function GenerateOverviewReport() {
     setShowPreviewModal(false);
   };
 
-  const handleExportReport = () => {
+  const handleExportReport = async () => {
+    const reportElement = document.getElementById('overview-report-content')
+    if (!reportElement) {
+      alert('Report content not found. Please try again.');
+      return;
+    }
+    
     const format = document.getElementById('report-format')?.value || 'pdf';
-    alert(`Exporting report as ${format.toUpperCase()}...`);
-    console.log('Report exported successfully.');
+    setIsExporting(true);
+    
+    try {
+      if (format === 'pdf') {
+        // Clone the element first to avoid modifying the original preview
+        const clonedElement = reportElement.cloneNode(true)
+        clonedElement.id = 'overview-report-content-clone'
+        
+        // Create a comprehensive style override for the CLONED element only
+        const printStyle = document.createElement('style')
+        printStyle.textContent = `
+          #overview-report-content-clone,
+          #overview-report-content-clone * {
+            color: #000000 !important;
+            background-color: #ffffff !important;
+            background-image: none !important;
+            border-color: #cccccc !important;
+            box-shadow: none !important;
+            text-shadow: none !important;
+            background: #ffffff !important;
+          }
+          
+          /* Override all Tailwind background classes for clone only */
+          #overview-report-content-clone .bg-gray-50 { background-color: #f9f9f9 !important; }
+          #overview-report-content-clone .bg-gray-100 { background-color: #f3f3f3 !important; }
+          #overview-report-content-clone .bg-gray-200 { background-color: #e5e5e5 !important; }
+          #overview-report-content-clone .bg-white { background-color: #ffffff !important; }
+          #overview-report-content-clone .bg-blue-50 { background-color: #f0f9ff !important; }
+          #overview-report-content-clone .bg-blue-600 { background-color: #dddddd !important; }
+          #overview-report-content-clone .bg-green-600 { background-color: #dddddd !important; }
+          #overview-report-content-clone .bg-yellow-600 { background-color: #dddddd !important; }
+          #overview-report-content-clone .bg-red-600 { background-color: #dddddd !important; }
+          
+          /* Override all Tailwind text color classes for clone only */
+          #overview-report-content-clone .text-gray-600 { color: #666666 !important; }
+          #overview-report-content-clone .text-gray-700 { color: #555555 !important; }
+          #overview-report-content-clone .text-gray-800 { color: #333333 !important; }
+          #overview-report-content-clone .text-gray-900 { color: #111111 !important; }
+          #overview-report-content-clone .text-blue-600 { color: #000000 !important; font-weight: bold !important; }
+          #overview-report-content-clone .text-green-600 { color: #000000 !important; font-weight: bold !important; }
+          #overview-report-content-clone .text-yellow-600 { color: #000000 !important; font-weight: bold !important; }
+          #overview-report-content-clone .text-red-600 { color: #000000 !important; font-weight: bold !important; }
+          
+          /* Override all Tailwind border classes for clone only */
+          #overview-report-content-clone .border { border: 1px solid #cccccc !important; }
+          #overview-report-content-clone .border-gray-200 { border-color: #e5e5e5 !important; }
+          #overview-report-content-clone .border-gray-300 { border-color: #cccccc !important; }
+          #overview-report-content-clone .border-blue-600 { border-color: #999999 !important; }
+          
+          /* Remove any CSS custom properties that might contain oklch for clone only */
+          #overview-report-content-clone * {
+            --tw-bg-opacity: 1 !important;
+            --tw-text-opacity: 1 !important;
+            --tw-border-opacity: 1 !important;
+          }
+        `
+        document.head.appendChild(printStyle)
+        document.body.appendChild(clonedElement)
+        
+        // Wait for styles to apply
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        const canvas = await html2canvas(clonedElement, {
+          scale: 1.2,
+          useCORS: true,
+          allowTaint: false,
+          backgroundColor: '#ffffff',
+          logging: false,
+          width: clonedElement.scrollWidth,
+          height: clonedElement.scrollHeight
+        });
+        
+        // Clean up
+        document.body.removeChild(clonedElement)
+        document.head.removeChild(printStyle)
+        
+        if (!canvas || canvas.width === 0 || canvas.height === 0) {
+          throw new Error('Canvas generation failed - no content captured')
+        }
+        
+        const imgData = canvas.toDataURL('image/png', 0.9);
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const imgWidth = canvas.width;
+        const imgHeight = canvas.height;
+        
+        // Better scaling calculation
+        const widthRatio = (pdfWidth - 20) / imgWidth;
+        const heightRatio = (pdfHeight - 20) / imgHeight;
+        const ratio = Math.min(widthRatio, heightRatio);
+        
+        const finalWidth = imgWidth * ratio;
+        const finalHeight = imgHeight * ratio;
+        const xOffset = (pdfWidth - finalWidth) / 2;
+        const yOffset = 10;
+        
+        pdf.addImage(imgData, 'PNG', xOffset, yOffset, finalWidth, finalHeight);
+        
+        const fileName = `Overview_Report_${selectedReportType || 'General'}_${new Date().toISOString().split('T')[0]}.pdf`;
+        pdf.save(fileName);
+      } else {
+        // Simple CSV export
+        const csvContent = 'Report Type,Generated Date,Status\n' + 
+          `${selectedReportType || 'General'},${new Date().toLocaleDateString()},Generated`;
+        const blob = new Blob([csvContent], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Overview_Report_${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+      
+      alert('Report exported successfully!');
+    } catch (error) {
+      console.error('Export failed:', error);
+      alert(`Export failed: ${error.message || 'Unknown error'}. Please try again.`);
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   return (
@@ -310,7 +440,7 @@ export default function GenerateOverviewReport() {
 
             {/* Modal Body */}
             <div className="flex-1 overflow-y-auto bg-gray-50">
-              <div className="p-8">
+              <div className="p-8" id="overview-report-content" ref={reportRef}>
                 {/* Export Controls */}
                 <div className="flex justify-end items-center gap-4 pb-6 mb-6 border-b border-dashed border-gray-300">
                   <div className="flex items-center gap-2">
@@ -327,9 +457,22 @@ export default function GenerateOverviewReport() {
                   </div>
                   <button
                     onClick={handleExportReport}
-                    className="px-5 py-2 text-sm font-semibold text-white bg-green-600 rounded-lg hover:bg-green-700 hover:-translate-y-0.5 hover:shadow-lg transition-all"
+                    disabled={isExporting}
+                    className="px-5 py-2 text-sm font-semibold text-white bg-green-600 rounded-lg hover:bg-green-700 hover:-translate-y-0.5 hover:shadow-lg transition-all disabled:bg-gray-400 disabled:cursor-not-allowed inline-flex items-center gap-2"
                   >
-                    Download
+                    {isExporting ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        Exporting...
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Download
+                      </>
+                    )}
                   </button>
                 </div>
 
